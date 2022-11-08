@@ -1,19 +1,25 @@
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
+//using Azure.Storage.Blobs;
+using Azure.Data.Tables;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Buffers;
+//using System.ComponentModel.DataAnnotations.Schema;
+//using Microsoft.WindowsAzure.Storage.Table;
 
 namespace nsgFunc
 {
-    public static class BlobTriggerIngestAndTransmit
+    public static class BlobTriggerIngestAndTransmit 
     {
         [FunctionName("BlobTriggerIngestAndTransmit")]
         public static async Task Run(
-            [BlobTrigger("%blobContainerName%/resourceId=/SUBSCRIPTIONS/{subId}/RESOURCEGROUPS/{resourceGroup}/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/{nsgName}/y={blobYear}/m={blobMonth}/d={blobDay}/h={blobHour}/m={blobMinute}/macAddress={mac}/PT1H.json", Connection = "%nsgSourceDataAccount%")]CloudBlockBlob myBlob,
+            [BlobTrigger("%blobContainerName%/resourceId=/SUBSCRIPTIONS/{subId}/RESOURCEGROUPS/{resourceGroup}/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/{nsgName}/y={blobYear}/m={blobMonth}/d={blobDay}/h={blobHour}/m={blobMinute}/macAddress={mac}/PT1H.json", Connection = "%nsgSourceDataAccount%")] CloudBlockBlob myBlob,
+
             [Table("checkpoints", Connection = "AzureWebJobsStorage")] CloudTable checkpointTable,
             Binder nsgDataBlobBinder,
             Binder cefLogBinder,
