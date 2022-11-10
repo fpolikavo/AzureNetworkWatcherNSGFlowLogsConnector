@@ -4,12 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Diagnostics;
-//using System.Collections.Generic;
-//using Microsoft.ServiceBus.Messaging;
-//using Microsoft.Azure.WebJobs.EventHubs;
-//using Microsoft.Azure.WebJobs.ServiceBus;
-//using Microsoft.Azure.WebJobs;
 
 namespace nsgFunc
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.WebJobs;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Formatting;
 
 namespace nsgFunc
 {
@@ -61,7 +61,7 @@ namespace nsgFunc
             {
                 sb.Append("{\"records\":[").Append(nsgMessagesString).Append("]}");
                 newClientContent = sb.ToString();
-            } 
+            }
             finally
             {
                 StringBuilderPool.Free(sb);
@@ -184,7 +184,7 @@ namespace nsgFunc
                                     innerFlow.mac,
                                     tuple);
 
-                                var sizeOfDenormalizedRecord = denormalizedRecord.GetSizeOfJSONObject(); 
+                                var sizeOfDenormalizedRecord = denormalizedRecord.GetSizeOfJSONObject();
 
                                 //for Event hub binding fork  -- start
                                 // Event hub basic message size is 256KB and the 'if' statement below ensures that list does not exceed size this size for Eventhub

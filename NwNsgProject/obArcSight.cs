@@ -49,7 +49,8 @@ namespace nsgFunc
                     sw.Start();
                     await stream.WriteAsync(tuple.Item1, 0, tuple.Item2);
 
-                    if (logOutgoingCEFflag) { 
+                    if (logOutgoingCEFflag)
+                    {
                         Guid guid = Guid.NewGuid();
                         var attributes = new Attribute[]
                         {
@@ -79,7 +80,7 @@ namespace nsgFunc
             return transmittedByteCount;
         }
 
-        static System.Collections.Generic.IEnumerable<Tuple<byte[],int>> bundleMessageListsCEF(string newClientContent, ILogger log)
+        static System.Collections.Generic.IEnumerable<Tuple<byte[], int>> bundleMessageListsCEF(string newClientContent, ILogger log)
         {
             const int MAXBUFFERSIZE = 1024 * 1024;
             var bytePool = ArrayPool<byte>.Shared;

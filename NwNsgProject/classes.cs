@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.Formatting;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Buffers;
-using Microsoft.CodeAnalysis.Formatting;
 
 class SplunkEventMessage
 {
@@ -13,7 +12,7 @@ class SplunkEventMessage
     public double time { get; set; }
     public DenormalizedRecord @event { get; set; }
 
-    public SplunkEventMessage (DenormalizedRecord splunkEvent)
+    public SplunkEventMessage(DenormalizedRecord splunkEvent)
     {
         sourcetype = "amdl:nsg:flowlogs";
         time = unixTime(splunkEvent.time);
@@ -22,7 +21,7 @@ class SplunkEventMessage
 
     double unixTime(string time)
     {
-        DateTime t = DateTime.ParseExact(time,"yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
+        DateTime t = DateTime.ParseExact(time, "yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
 
         double unixTimestamp = t.Ticks - new DateTime(1970, 1, 1).Ticks;
         unixTimestamp /= TimeSpan.TicksPerSecond;
@@ -227,7 +226,8 @@ class DenormalizedRecord
                 Buffer.BlockCopy(crlf, 0, buffer, s.Length, 2);
 
                 Buffer.BlockCopy(buffer, 0, transmission, offset, bytesToAppend);
-            } else
+            }
+            else
             {
                 throw new System.IO.InternalBufferOverflowException("ArcSight transmission buffer overflow");
             }

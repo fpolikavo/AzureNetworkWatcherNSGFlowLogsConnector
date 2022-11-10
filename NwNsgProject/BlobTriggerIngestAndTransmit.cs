@@ -1,20 +1,16 @@
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
-//using Azure.Storage.Blobs;
-using Azure.Data.Tables;
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Buffers;
-//using System.ComponentModel.DataAnnotations.Schema;
-//using Microsoft.WindowsAzure.Storage.Table;
+
 
 namespace nsgFunc
 {
-    public static class BlobTriggerIngestAndTransmit 
+    public static class BlobTriggerIngestAndTransmit
     {
         [FunctionName("BlobTriggerIngestAndTransmit")]
         public static async Task Run(
@@ -56,8 +52,8 @@ namespace nsgFunc
             Checkpoint checkpoint = Checkpoint.GetCheckpoint(blobDetails, checkpointTable);
 
             var blockList = myBlob.DownloadBlockListAsync().Result;
-            var startingByte = blockList.Where((item, index) => index<checkpoint.CheckpointIndex).Sum(item => item.Length);
-            var endingByte = blockList.Where((item, index) => index < blockList.Count()-1).Sum(item => item.Length);
+            var startingByte = blockList.Where((item, index) => index < checkpoint.CheckpointIndex).Sum(item => item.Length);
+            var endingByte = blockList.Where((item, index) => index < blockList.Count() - 1).Sum(item => item.Length);
             var dataLength = endingByte - startingByte;
 
             log.LogDebug("Blob: {0}, starting byte: {1}, ending byte: {2}, number of bytes: {3}", blobDetails.ToString(), startingByte, endingByte, dataLength);
@@ -82,14 +78,15 @@ namespace nsgFunc
             var bytePool = ArrayPool<byte>.Shared;
             byte[] nsgMessages = bytePool.Rent((int)dataLength);
             try
-            {                
+            {
                 CloudBlockBlob blob = nsgDataBlobBinder.BindAsync<CloudBlockBlob>(attributes).Result;
                 await blob.DownloadRangeToByteArrayAsync(nsgMessages, 0, startingByte, dataLength);
 
                 if (nsgMessages[0] == ',')
                 {
                     nsgMessagesString = System.Text.Encoding.UTF8.GetString(nsgMessages, 1, (int)(dataLength - 1));
-                } else
+                }
+                else
                 {
                     nsgMessagesString = System.Text.Encoding.UTF8.GetString(nsgMessages, 0, (int)dataLength);
                 }
@@ -105,7 +102,7 @@ namespace nsgFunc
             }
 
             //log.LogDebug(nsgMessagesString);
-            
+
 
             try
             {
@@ -118,7 +115,7 @@ namespace nsgFunc
                 throw ex;
             }
 
-            checkpoint.PutCheckpoint(checkpointTable, blockList.Count()-1);
+            checkpoint.PutCheckpoint(checkpointTable, blockList.Count() - 1);
         }
     }
 }
